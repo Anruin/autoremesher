@@ -21,69 +21,54 @@
  */
 #ifndef AUTO_REMESHER_QUAD_MESH_GENERATOR_H
 #define AUTO_REMESHER_QUAD_MESH_GENERATOR_H
-#include <QObject>
+
 #include <AutoRemesher/AutoRemesher>
 
-class QuadMeshGenerator: public QObject
-{
-    Q_OBJECT
+class QuadMeshGenerator {
 public:
-    struct Parameters
-    {
-        double scaling = 0.0;
-        size_t targetTriangleCount = 0;
-        AutoRemesher::ModelType modelType = AutoRemesher::ModelType::Organic;
-    };
+	struct Parameters {
+		double scaling = 0.0;
+		size_t targetTriangleCount = 0;
+		AutoRemesher::ModelType modelType = AutoRemesher::ModelType::Organic;
+	};
 
-    QuadMeshGenerator(const std::vector<AutoRemesher::Vector3> &vertices,
-            const std::vector<std::vector<size_t>> &triangles) :
-        m_vertices(vertices),
-        m_triangles(triangles)
-    {
-    }
-    
-    ~QuadMeshGenerator()
-    {
-        delete m_remeshedVertices;
-        delete m_remeshedQuads;
-        delete m_autoRemesher;
-    }
-    
-    void setParameters(const Parameters &parameters)
-    {
-        m_parameters = parameters;
-    }
-    
-    std::vector<AutoRemesher::Vector3> *takeRemeshedVertices()
-    {
-        std::vector<AutoRemesher::Vector3> *remeshedVertices = m_remeshedVertices;
-        m_remeshedVertices = nullptr;
-        return remeshedVertices;
-    }
-    
-    std::vector<std::vector<size_t>> *takeRemeshedQuads()
-    {
-        std::vector<std::vector<size_t>> *remeshedQuads = m_remeshedQuads;
-        m_remeshedQuads = nullptr;
-        return remeshedQuads;
-    }
+	QuadMeshGenerator(const std::vector<AutoRemesher::Vector3> &vertices,
+					  const std::vector<std::vector<size_t>> &triangles) :
+			m_vertices(vertices),
+			m_triangles(triangles) {
+	}
 
-    void generate();
-    void emitProgress(float progress);
-    
-signals:
-    void reportProgress(float progress);
-    void finished();
-public slots:
-    void process();
-    
+	~QuadMeshGenerator() {
+		delete m_remeshedVertices;
+		delete m_remeshedQuads;
+		delete m_autoRemesher;
+	}
+
+	void setParameters(const Parameters &parameters) {
+		m_parameters = parameters;
+	}
+
+	std::vector<AutoRemesher::Vector3> *takeRemeshedVertices() {
+		std::vector<AutoRemesher::Vector3> *remeshedVertices = m_remeshedVertices;
+		m_remeshedVertices = nullptr;
+		return remeshedVertices;
+	}
+
+	std::vector<std::vector<size_t>> *takeRemeshedQuads() {
+		std::vector<std::vector<size_t>> *remeshedQuads = m_remeshedQuads;
+		m_remeshedQuads = nullptr;
+		return remeshedQuads;
+	}
+
+	void generate();
+
 private:
-    std::vector<AutoRemesher::Vector3> m_vertices;
-    std::vector<std::vector<size_t>> m_triangles;
-    std::vector<AutoRemesher::Vector3> *m_remeshedVertices = nullptr;
-    std::vector<std::vector<size_t>> *m_remeshedQuads = nullptr;
-    AutoRemesher::AutoRemesher *m_autoRemesher = nullptr;
-    Parameters m_parameters;
+	std::vector<AutoRemesher::Vector3> m_vertices;
+	std::vector<std::vector<size_t>> m_triangles;
+	std::vector<AutoRemesher::Vector3> *m_remeshedVertices = nullptr;
+	std::vector<std::vector<size_t>> *m_remeshedQuads = nullptr;
+	AutoRemesher::AutoRemesher *m_autoRemesher = nullptr;
+	Parameters m_parameters;
 };
 
 #endif

@@ -19,33 +19,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-#include <QElapsedTimer>
-#include <QDebug>
 #include "quadmeshgenerator.h"
-
-void QuadMeshGenerator::process()
-{
-    QElapsedTimer timer;
-    timer.start();
-    
-    generate();
-    
-    auto timeUsed = timer.elapsed();
-    qDebug() << "Quad mesh generation took" << timeUsed << "milliseconds";
-    
-    emit finished();
-}
-
-void QuadMeshGenerator::emitProgress(float progress)
-{
-    emit reportProgress(progress);
-}
-
-static void reportProgressHandler(void *tag, float progress)
-{
-    QuadMeshGenerator *generator = (QuadMeshGenerator *)tag;
-    generator->emitProgress(progress);
-}
 
 void QuadMeshGenerator::generate()
 {
@@ -57,7 +31,6 @@ void QuadMeshGenerator::generate()
         m_autoRemesher->setTargetTriangleCount(m_parameters.targetTriangleCount);
     m_autoRemesher->setModelType(m_parameters.modelType);
     m_autoRemesher->setTag(this);
-    m_autoRemesher->setProgressHandler(reportProgressHandler);
     if (!m_autoRemesher->remesh())
         return;
     
