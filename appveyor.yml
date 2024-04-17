@@ -7,10 +7,10 @@ environment:
       qtdir: C:\Qt\5.13.2\msvc2017_64
       sysdirname: SysWOW64
 
-    - platform: x86
-      target: i686-pc-windows-msvc
-      qtdir: C:\Qt\5.13.2\msvc2017
-      sysdirname: system32
+#    - platform: x86
+#      target: i686-pc-windows-msvc
+#      qtdir: C:\Qt\5.13.2\msvc2017
+#      sysdirname: system32
 
 cache:
   CGAL-5.1-beta1-Setup.exe -> appveyor.yml
