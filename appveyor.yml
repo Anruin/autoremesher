@@ -144,7 +144,7 @@ deploy:
     release: $(TAG)
     force_update: true
     auth_token:
-      secure: Rhzhefjk89WN2tDht8vVKYAojGfR23LhDPKPxhQwbT7k3qswSWjmoFoDTpIHNfc0
+      secure: FoHhL/65oG1xGRY9UQotGOhvbtb9vByPoSfdWjxqxhk7rPOwnJ/DWlC9YdKYaJvFd9ueRa/HVgPNMBwkJTv43F4R0IpPtfU347Y7FOxvQxfPhNE/eoskleFSlVKAqi0e
     artifact: platform_zips
     draft: false
     prerelease: false
@@ -155,7 +155,7 @@ deploy:
     release: $(TAG)
     force_update: true
     auth_token:
-      secure: Rhzhefjk89WN2tDht8vVKYAojGfR23LhDPKPxhQwbT7k3qswSWjmoFoDTpIHNfc0
+      secure: FoHhL/65oG1xGRY9UQotGOhvbtb9vByPoSfdWjxqxhk7rPOwnJ/DWlC9YdKYaJvFd9ueRa/HVgPNMBwkJTv43F4R0IpPtfU347Y7FOxvQxfPhNE/eoskleFSlVKAqi0e
     artifact: platform_zips
     draft: false
     prerelease: false
@@ -166,7 +166,7 @@ deploy:
     release: $(TAG)
     force_update: true
     auth_token:
-      secure: Rhzhefjk89WN2tDht8vVKYAojGfR23LhDPKPxhQwbT7k3qswSWjmoFoDTpIHNfc0
+      secure: FoHhL/65oG1xGRY9UQotGOhvbtb9vByPoSfdWjxqxhk7rPOwnJ/DWlC9YdKYaJvFd9ueRa/HVgPNMBwkJTv43F4R0IpPtfU347Y7FOxvQxfPhNE/eoskleFSlVKAqi0e
     artifact: platform_zips
     draft: false
     prerelease: false
