@@ -30,9 +30,9 @@ namespace AutoRemesher
 class MeshSeparator
 {
 public:
-    static void splitToIslands(const std::vector<std::vector<size_t>> &faces, 
+    static void splitToIslands(const std::vector<std::vector<size_t>> &faces,
         std::vector<std::vector<std::vector<size_t>>> &islands);
-    static void buildEdgeToFaceMap(const std::vector<std::vector<size_t>> &faces, 
+    static void buildEdgeToFaceMap(const std::vector<std::vector<size_t>> &faces,
         std::map<std::pair<size_t, size_t>, size_t> &edgeToFaceMap);
 };
     

@@ -32,7 +32,7 @@ void MeshSeparator::splitToIslands(const std::vector<std::vector<size_t>> &faces
     std::map<std::pair<size_t, size_t>, size_t> edgeToFaceMap;
     buildEdgeToFaceMap(faces, edgeToFaceMap);
     
-    std::unordered_set<size_t> processedFaces;
+    std::unordered_set<std::size_t> processedFaces;
     std::queue<size_t> waitFaces;
     for (size_t indexInGroup = 0; indexInGroup < faces.size(); ++indexInGroup) {
         if (processedFaces.find(indexInGroup) != processedFaces.end())
