@@ -14,16 +14,17 @@ endif ()
 add_definitions(-DNOMINMAX)
 add_definitions(-D_USE_MATH_DEFINES)
 
-set(CGAL_DIR "X:/Samolet/autoremesher/thirdparty/cgal/CGAL-5.1-beta1")
-set(CGAL_INCLUDE_DIR "X:/Samolet/autoremesher/thirdparty/cgal/CGAL-5.1-beta1/include")
-set(BOOST_INCLUDE_DIR "X:/Samolet/boost_1_66_0")
-set(GMP_INCLUDE_DIR "X:/Samolet/autoremesher/thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/include")
-set(MPFR_INCLUDE_DIR "X:/Samolet/autoremesher/thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/include")
-set(GMP_LIB_DIR "X:/Samolet/autoremesher/thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib")
-set(MPFR_LIB_DIR "X:/Samolet/autoremesher/thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib")
+set(BOOST_INCLUDE_DIR "C:/SDK/boost_1_66_0")
+set(CGAL_DIR "thirdparty/cgal/CGAL-5.1-beta1")
+set(CGAL_INCLUDE_DIR "thirdparty/cgal/CGAL-5.1-beta1/include")
+set(GMP_INCLUDE_DIR "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/include")
+set(MPFR_INCLUDE_DIR "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/include")
+set(GMP_LIB_DIR "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib")
+set(MPFR_LIB_DIR "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib")
 
 # Include directories
 include_directories(
+        "C:/SDK/boost_1_66_0"
         "thirdparty/libigl/include"
         "thirdparty/eigen"
         "thirdparty/openvdb/openvdb-7.0.0"
@@ -31,21 +32,9 @@ include_directories(
         "thirdparty/geogram/geogram-1.7.5/src/lib"
         "thirdparty/geogram"
         "thirdparty/tbb/include"
-        "X:/Samolet/boost_1_66_0"
         "thirdparty/cgal/CGAL-5.1-beta1/include"
         "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/include"
         "include"
-)
-
-# Link directories
-link_directories(
-        "thirdparty/blosc/c-blosc-1.18.1/build/blosc/Release"
-        "thirdparty/tbb/build/Release"
-        "thirdparty/openvdb/openvdb-7.0.0/build/openvdb/Release"
-        "thirdparty/openexr/openexr-2.4.1/build/IlmBase/Half/Release"
-        "thirdparty/zlib/zlib-1.2.11/build/Release"
-        "thirdparty/cgal/CGAL-5.1-beta1/"
-        "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib"
 )
 
 # Add the source files
@@ -392,5 +381,17 @@ set(SOURCE_FILES ${SOURCE_FILES} thirdparty/geogram/geogram-1.7.5/src/lib/explor
 # Add the executable
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
-# Link the necessary libraries
-target_link_libraries(${PROJECT_NAME} openvdb Half-2_4 zlib libblosc tbb libgmp-10 libmpfr-4)
+# # Link the necessary libraries
+# target_link_libraries(${PROJECT_NAME} openvdb Half-2_4 zlib libblosc tbb libgmp-10 libmpfr-4)
+
+# Link directories
+set(MyFavLib_DIRECTORIES 
+    optimized "thirdparty/blosc/c-blosc-1.18.1/build/blosc/Release/libblosc" debug "thirdparty/blosc/c-blosc-1.18.1/build/blosc/Debug/libblosc"
+    optimized "thirdparty/tbb/build/Release/tbb" debug "thirdparty/tbb/build/Debug/tbb_debug"
+    optimized "thirdparty/openvdb/openvdb-7.0.0/build/openvdb/Release/openvdb" debug "thirdparty/openvdb/openvdb-7.0.0/build/openvdb/Release/openvdb"
+    optimized "thirdparty/openexr/openexr-2.4.1/build/IlmBase/Half/Release/Half-2_4" debug "thirdparty/openexr/openexr-2.4.1/build/IlmBase/Half/Debug/Half-2_4_d"
+    optimized "thirdparty/zlib/zlib-1.2.11/build/Release/zlib" debug "thirdparty/zlib/zlib-1.2.11/build/Debug/zlibd"
+    optimized "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib/libgmp-10" debug "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib/libgmp-10"
+    optimized "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib/libmpfr-4" debug "thirdparty/cgal/CGAL-5.1-beta1/auxiliary/gmp/lib/libmpfr-4"
+)
+target_link_libraries(${PROJECT_NAME} ${MyFavLib_DIRECTORIES})
