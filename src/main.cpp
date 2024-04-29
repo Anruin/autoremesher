@@ -24,6 +24,7 @@
 #include "iostream"
 #include "memory"
 #include "vector"
+#include "geogram/basic/common.h"
 
 struct Input {
 	/** The vertices of the mesh. [[x0,y0,z0],... [xn,yn,zn]] */
@@ -33,6 +34,8 @@ struct Input {
 };
 
 int main(int argc, char **argv) {
+	GEO::initialize();
+	
 	// Input and output file paths.
 	std::string argInputFilePath = "input.bin";
 	std::string argOutputFilePath = "output.bin";
@@ -84,12 +87,11 @@ int main(int argc, char **argv) {
 
 	// Read vertices.
 	for (size_t i = 0; i < verticesNumber; i++) {
-		// Reserve memory for vertex.
-		size_t vertexSize = 3 * sizeof(double);
+		size_t vertexSize = 3;
 		input.vertices[i].resize(vertexSize);
 
 		// Read vertex.
-		inputFileStream.read((char *) input.vertices[i].data(), (std::streamsize) vertexSize);
+		inputFileStream.read((char *) input.vertices[i].data(), (std::streamsize) vertexSize * sizeof(double));
 	}
 
 	// Read triangles number.
@@ -102,11 +104,11 @@ int main(int argc, char **argv) {
 	// Read triangles.
 	for (size_t i = 0; i < trianglesNumber; i++) {
 		// Reserve memory for triangle.
-		size_t triangleSize = 3 * sizeof(size_t);
+		size_t triangleSize = 3;
 		input.triangles[i].resize(triangleSize);
 
 		// Read triangle.
-		inputFileStream.read((char *) input.triangles[i].data(), (std::streamsize) triangleSize);
+		inputFileStream.read((char *) input.triangles[i].data(), (std::streamsize) triangleSize * sizeof(size_t));
 	}
 
 	// Prepare parameters.

@@ -27,7 +27,7 @@
 #include <map>
 #include <set>
 #include <igl/boundary_loop.h>
-#include <exploragram/hexdom/polygon.h>
+//#include <exploragram/hexdom/polygon.h>
 
 namespace AutoRemesher
 {

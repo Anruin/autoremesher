@@ -31,6 +31,7 @@
 #include <boost/function_output_iterator.hpp>
 #include <AutoRemesher/Vector3>
 #include <AutoRemesher/IsotropicRemesher>
+#include <CGAL/Polygon_mesh_processing/detect_features.h>
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel     Kernel;
 typedef Kernel::Point_3                                         Point;

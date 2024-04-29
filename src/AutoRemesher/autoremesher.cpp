@@ -254,6 +254,7 @@ bool AutoRemesher::remesh()
             m_parameterizationThreads(parameterizationThreads)
         {   
         }
+        
         void operator()(const tbb::blocked_range<size_t> &range) const
         {
             for (size_t i = range.begin(); i != range.end(); ++i) {
