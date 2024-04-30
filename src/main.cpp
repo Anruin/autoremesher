@@ -33,9 +33,9 @@ struct Input {
 	std::vector<std::vector<size_t>> triangles;
 };
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 	GEO::initialize();
-	
+
 	// Input and output file paths.
 	std::string argInputFilePath = "input.bin";
 	std::string argOutputFilePath = "output.bin";
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 
 	// Read vertices number.
 	size_t verticesNumber = 0;
-	inputFileStream.read((char *) &verticesNumber, sizeof(size_t));
+	inputFileStream.read((char*)&verticesNumber, sizeof(size_t));
 
 	// Reserve memory for vertices.
 	input.vertices.resize(verticesNumber);
@@ -91,12 +91,12 @@ int main(int argc, char **argv) {
 		input.vertices[i].resize(vertexSize);
 
 		// Read vertex.
-		inputFileStream.read((char *) input.vertices[i].data(), (std::streamsize) vertexSize * sizeof(double));
+		inputFileStream.read((char*)input.vertices[i].data(), (std::streamsize)vertexSize * sizeof(double));
 	}
 
 	// Read triangles number.
 	size_t trianglesNumber = 0;
-	inputFileStream.read((char *) &trianglesNumber, sizeof(size_t));
+	inputFileStream.read((char*)&trianglesNumber, sizeof(size_t));
 
 	// Reserve memory for triangles.
 	input.triangles.resize(trianglesNumber);
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
 		input.triangles[i].resize(triangleSize);
 
 		// Read triangle.
-		inputFileStream.read((char *) input.triangles[i].data(), (std::streamsize) triangleSize * sizeof(size_t));
+		inputFileStream.read((char*)input.triangles[i].data(), (std::streamsize)triangleSize * sizeof(size_t));
 	}
 
 	// Prepare parameters.
@@ -120,21 +120,26 @@ int main(int argc, char **argv) {
 	// Prepare vertices and triangles.
 	std::vector<AutoRemesher::Vector3> vertices;
 	std::vector<std::vector<size_t>> triangles;
-	for (const auto &vertex: input.vertices) {
+	for (const auto& vertex : input.vertices) {
 		vertices.emplace_back(vertex[0], vertex[1], vertex[2]);
 	}
-	for (const auto &triangle: input.triangles) {
+	for (const auto& triangle : input.triangles) {
 		triangles.emplace_back(triangle);
 	}
 
-	// Generate quad mesh.
-	QuadMeshGenerator quadMeshGenerator(vertices, triangles);
-	quadMeshGenerator.setParameters(parameters);
-	quadMeshGenerator.generate();
+	// std::cout << ">>> GENERATE: BEGIN" << std::endl;
 
+	// Generate quad mesh.
+	QuadMeshGenerator* quadMeshGenerator = new QuadMeshGenerator(vertices, triangles);
+	quadMeshGenerator->setParameters(parameters);
+	quadMeshGenerator->generate();
+
+	// std::cout << ">>> GENERATE: END" << std::endl;
+
+#if 1
 	// Remeshed vertices.
 	std::unique_ptr<std::vector<AutoRemesher::Vector3>> remeshedVertices;
-	remeshedVertices.reset(quadMeshGenerator.takeRemeshedVertices());
+	remeshedVertices.reset(quadMeshGenerator->takeRemeshedVertices());
 	if (remeshedVertices == nullptr) {
 		std::cerr << "Failed to get remeshed vertices." << std::endl;
 		return 1;
@@ -142,7 +147,7 @@ int main(int argc, char **argv) {
 
 	// Remeshed quads.
 	std::unique_ptr<std::vector<std::vector<size_t>>> remeshedQuads;
-	remeshedQuads.reset(quadMeshGenerator.takeRemeshedQuads());
+	remeshedQuads.reset(quadMeshGenerator->takeRemeshedQuads());
 	if (remeshedQuads == nullptr) {
 		std::cerr << "Failed to get remeshed quads." << std::endl;
 		return 1;
@@ -157,14 +162,14 @@ int main(int argc, char **argv) {
 
 	// Write vertices number.
 	verticesNumber = remeshedVertices->size();
-	outputFileStream.write((char *) &verticesNumber, sizeof(size_t));
+	outputFileStream.write((char*)&verticesNumber, sizeof(size_t));
 
 	// Write vertices.
 	for (size_t i = 0; i < verticesNumber; i++) {
 		// Write vertex.
-		outputFileStream.write((char *) &(*remeshedVertices)[i].x(), sizeof(double));
-		outputFileStream.write((char *) &(*remeshedVertices)[i].y(), sizeof(double));
-		outputFileStream.write((char *) &(*remeshedVertices)[i].z(), sizeof(double));
+		outputFileStream.write((char*)&(*remeshedVertices)[i].x(), sizeof(double));
+		outputFileStream.write((char*)&(*remeshedVertices)[i].y(), sizeof(double));
+		outputFileStream.write((char*)&(*remeshedVertices)[i].z(), sizeof(double));
 	}
 
 	// Write quads number.
@@ -173,11 +178,14 @@ int main(int argc, char **argv) {
 	// Write quads.
 	for (size_t i = 0; i < trianglesNumber; i++) {
 		// Write quad.
-		outputFileStream.write((char *) &(*remeshedQuads)[i][0], sizeof(size_t));
-		outputFileStream.write((char *) &(*remeshedQuads)[i][1], sizeof(size_t));
-		outputFileStream.write((char *) &(*remeshedQuads)[i][2], sizeof(size_t));
-		outputFileStream.write((char *) &(*remeshedQuads)[i][3], sizeof(size_t));
+		outputFileStream.write((char*)&(*remeshedQuads)[i][0], sizeof(size_t));
+		outputFileStream.write((char*)&(*remeshedQuads)[i][1], sizeof(size_t));
+		outputFileStream.write((char*)&(*remeshedQuads)[i][2], sizeof(size_t));
+		outputFileStream.write((char*)&(*remeshedQuads)[i][3], sizeof(size_t));
 	}
+#endif
+
+	delete quadMeshGenerator;
 
 	return 0;
 }
