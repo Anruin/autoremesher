@@ -178,8 +178,12 @@ namespace AutoRemesher {
 			double scaling;
 		};
 
-		std::vector<IslandContext> islandContexes;
-		islandContexes.reserve(m_trianglesIslands.size());
+		//
+		// Set IslandContexts
+		//
+
+		std::vector<IslandContext> IslandContexts;
+		IslandContexts.reserve(m_trianglesIslands.size());
 		for (size_t islandIndex = 0; islandIndex < m_trianglesIslands.size(); ++islandIndex) {
 			const auto& island = m_trianglesIslands[islandIndex];
 			IslandContext context;
@@ -201,8 +205,14 @@ namespace AutoRemesher {
 			context.scaling = m_scaling;
 			context.voxelSize = m_voxelSize;
 
-			islandContexes.push_back(context);
+			std::cout << ">>> islandIndex: " << islandIndex << "; voxelSize: " << context.voxelSize << "; scaling: " << context.scaling << std::endl;
+
+			IslandContexts.push_back(context);
 		}
+
+		//
+		// Set pointers to IslandContexts for parameterizationThreads
+		//
 
 		class ParameterizationThread {
 		public:
@@ -211,27 +221,29 @@ namespace AutoRemesher {
 				delete remesher;
 			}
 
-			size_t islandIndex = 0;
-			IslandContext* island = nullptr;
+			size_t islandIndex = 0; // Index of element of the IslandContexts
+			IslandContext* island = nullptr; // Pointer to element of the IslandContexts
 			Parameterizer* parameterizer = nullptr;
 			QuadExtractor* remesher = nullptr;
-			AutoRemesher* autoRemesher = nullptr;
+			AutoRemesher* autoRemesher = nullptr; // Pointer to this AutoRemesher
 			float progressWeight = 1.0;
 		};
 
-		m_threadProgressWeights.resize(islandContexes.size(), 1.0);
+		m_threadProgressWeights.resize(IslandContexts.size(), 1.0);
 
-		std::vector<ParameterizationThread> parameterizationThreads(islandContexes.size());
-		for (size_t i = 0; i < islandContexes.size(); ++i) {
-			auto& thread = parameterizationThreads[i];
-			auto& context = islandContexes[i];
+		std::vector<ParameterizationThread> ParameterizationThreads(IslandContexts.size());
+		for (size_t i = 0; i < IslandContexts.size(); ++i) {
+			auto& thread = ParameterizationThreads[i];
+			auto& context = IslandContexts[i];
 			thread.islandIndex = i;
 			thread.island = &context;
 			thread.autoRemesher = this;
-			if (!m_triangles.empty()) m_threadProgressWeights[i] = (float)(((double)context.triangles.size() / m_triangles.size()));
+			if (!m_triangles.empty()) {
+				m_threadProgressWeights[i] = (float)(((double)context.triangles.size() / m_triangles.size()));
+			}
 		}
 
-		m_threadProgress.resize(parameterizationThreads.size());
+		m_threadProgress.resize(ParameterizationThreads.size());
 
 		class SurfaceParameterizer {
 		public:
@@ -290,20 +302,40 @@ namespace AutoRemesher {
 			std::vector<ParameterizationThread>* m_parameterizationThreads = nullptr;
 		};
 
+		//
+		// Process
+		//
+		// Create ParameterizationThreads[i].parameterizer (uvs for remesher)
+		// Call ParameterizationThreads[i].parameterizer->parameterize()
+		// Create ParameterizationThreads[i].remesher
+		// Call ParameterizationThreads[i].remesher->extract()
+		//
+		
+#if 1
+		{
+			SurfaceParameterizer objSurfaceParameterizer(&ParameterizationThreads);
+			tbb::blocked_range<size_t> range(0, ParameterizationThreads.size());
+			objSurfaceParameterizer(range);
+		}
+#else
 		tbb::parallel_for(tbb::blocked_range<size_t>(0, parameterizationThreads.size()),
 						  SurfaceParameterizer(&parameterizationThreads));
+#endif
 
-		for (size_t i = 0; i < parameterizationThreads.size(); ++i) {
-			auto& thread = parameterizationThreads[i];
+		for (size_t i = 0; i < ParameterizationThreads.size(); ++i) {
+			auto& thread = ParameterizationThreads[i];
 			if (nullptr == thread.remesher) continue;
+			
 			const auto& quads = thread.remesher->remeshedQuads();
 			if (quads.empty()) continue;
 			const auto& vertices = thread.remesher->remeshedVertices();
 			size_t vertexStartIndex = m_remeshedVertices.size();
 			m_remeshedVertices.reserve(m_remeshedVertices.size() + vertices.size());
+			
 			for (const auto& it : vertices) {
 				m_remeshedVertices.push_back(it);
 			}
+			
 			for (const auto& it : quads) {
 				std::vector<size_t> quad;
 				quad.reserve(it.size());

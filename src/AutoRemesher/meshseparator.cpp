@@ -23,55 +23,48 @@
 #include <queue>
 #include <AutoRemesher/MeshSeparator>
 
-namespace AutoRemesher
-{
-    
-void MeshSeparator::splitToIslands(const std::vector<std::vector<size_t>> &faces, 
-        std::vector<std::vector<std::vector<size_t>>> &islands)
-{
-    std::map<std::pair<size_t, size_t>, size_t> edgeToFaceMap;
-    buildEdgeToFaceMap(faces, edgeToFaceMap);
-    
-    std::unordered_set<std::size_t> processedFaces;
-    std::queue<size_t> waitFaces;
-    for (size_t indexInGroup = 0; indexInGroup < faces.size(); ++indexInGroup) {
-        if (processedFaces.find(indexInGroup) != processedFaces.end())
-            continue;
-        waitFaces.push(indexInGroup);
-        std::vector<std::vector<size_t>> island;
-        while (!waitFaces.empty()) {
-            size_t index = waitFaces.front();
-            waitFaces.pop();
-            if (processedFaces.find(index) != processedFaces.end())
-                continue;
-            const auto &face = faces[index];
-            for (size_t i = 0; i < face.size(); i++) {
-                size_t j = (i + 1) % face.size();
-                auto findOppositeFaceResult = edgeToFaceMap.find({face[j], face[i]});
-                if (findOppositeFaceResult == edgeToFaceMap.end())
-                    continue;
-                waitFaces.push(findOppositeFaceResult->second);
-            }
-            island.push_back(faces[index]);
-            processedFaces.insert(index);
-        }
-        if (island.empty())
-            continue;
-        islands.push_back(island);
-    }
-}
-    
-void MeshSeparator::buildEdgeToFaceMap(const std::vector<std::vector<size_t>> &faces, 
-        std::map<std::pair<size_t, size_t>, size_t> &edgeToFaceMap)
-{
-    edgeToFaceMap.clear();
-    for (size_t index = 0; index < faces.size(); ++index) {
-        const auto &face = faces[index];
-        for (size_t i = 0; i < face.size(); i++) {
-            size_t j = (i + 1) % face.size();
-            edgeToFaceMap[{face[i], face[j]}] = index;
-        }
-    }
-}
-    
+namespace AutoRemesher {
+	void MeshSeparator::splitToIslands(
+		const std::vector<std::vector<size_t>>& faces,
+		std::vector<std::vector<std::vector<size_t>>>& islands) {
+		std::map<std::pair<size_t, size_t>, size_t> edgeToFaceMap;
+		buildEdgeToFaceMap(faces, edgeToFaceMap);
+
+		std::unordered_set<std::size_t> processedFaces;
+		std::queue<size_t> waitFaces;
+		for (size_t indexInGroup = 0; indexInGroup < faces.size(); ++indexInGroup) {
+			if (processedFaces.find(indexInGroup) != processedFaces.end()) continue;
+			waitFaces.push(indexInGroup);
+			std::vector<std::vector<size_t>> island;
+			while (!waitFaces.empty()) {
+				size_t index = waitFaces.front();
+				waitFaces.pop();
+				if (processedFaces.find(index) != processedFaces.end()) continue;
+				const auto& face = faces[index];
+				for (size_t i = 0; i < face.size(); i++) {
+					size_t j = (i + 1) % face.size();
+					auto findOppositeFaceResult = edgeToFaceMap.find({face[j], face[i]});
+					if (findOppositeFaceResult == edgeToFaceMap.end()) continue;
+					waitFaces.push(findOppositeFaceResult->second);
+				}
+				island.push_back(faces[index]);
+				processedFaces.insert(index);
+			}
+			if (island.empty()) continue;
+			islands.push_back(island);
+		}
+	}
+
+	void MeshSeparator::buildEdgeToFaceMap(
+		const std::vector<std::vector<size_t>>& faces,
+		std::map<std::pair<size_t, size_t>, size_t>& edgeToFaceMap) {
+		edgeToFaceMap.clear();
+		for (size_t index = 0; index < faces.size(); ++index) {
+			const auto& face = faces[index];
+			for (size_t i = 0; i < face.size(); i++) {
+				size_t j = (i + 1) % face.size();
+				edgeToFaceMap[{face[i], face[j]}] = index;
+			}
+		}
+	}
 }
