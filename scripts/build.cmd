@@ -61,12 +61,13 @@ cmake -G "%VISUALSTUDIO%" -A %PLATFORM% -D "OPENVDB_CORE_STATIC=OFF" -D "OPENVDB
 cmake --build . --config Release
 cd %BUILD_DIR%
 
-REM Download and install CGAL
-REM Check if CGAL-5.1-beta1-Setup.exe exists and download  if not
-if not exist %BUILD_DIR%\thirdparty\cgal\CGAL-5.1-beta1-Setup.exe (
-    echo Downloading CGAL-5.1-beta1-Setup.exe
-    curl -L https://github.com/CGAL/cgal/releases/download/releases/CGAL-5.1-beta1/CGAL-5.1-beta1-Setup.exe -o %BUILD_DIR%\thirdparty\cgal\CGAL-5.1-beta1-Setup.exe
-    %BUILD_DIR%\thirdparty\cgal\CGAL-5.1-beta1-Setup.exe /S /D=%BUILD_DIR%\thirdparty\cgal\cgal-5.1-beta1
-)
+@REM REM Download and install CGAL
+@REM REM Check if CGAL-5.1-beta1-Setup.exe exists and download  if not
+@REM if not exist %BUILD_DIR%\thirdparty\cgal\CGAL-5.1-beta1-Setup.exe (
+@REM     echo Downloading CGAL-5.1-beta1-Setup.exe
+@REM     curl -L https://github.com/CGAL/cgal/releases/download/releases/CGAL-5.1-beta1/CGAL-5.1-beta1-Setup.exe -o %BUILD_DIR%\thirdparty\cgal\CGAL-5.1-beta1-Setup.exe
+@REM     %BUILD_DIR%\thirdparty\cgal\CGAL-5.1-beta1-Setup.exe /S /D=%BUILD_DIR%\thirdparty\cgal\cgal-5.1-beta1
+@REM )
+@REM cd %BUILD_DIR%
 
 endlocal

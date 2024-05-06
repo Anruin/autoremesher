@@ -740,6 +740,7 @@ namespace GEO {
             }
         }
 
+        std::cout << "\n>>> [" << this << "] GEO::FrameField::create_from_surface_mesh Logger::out" << std::endl;
         Logger::out("Frames") 
             << nb_constrained << " constrained edges" << std::endl;
 

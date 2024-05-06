@@ -63,7 +63,7 @@ namespace {
     int running_threads_invocations_ = 0;
 
     bool multithreading_initialized_ = false;
-    bool multithreading_enabled_ = true;
+    bool multithreading_enabled_ = false;
 
     index_t max_threads_initialized_ = false;
     index_t max_threads_ = 0;

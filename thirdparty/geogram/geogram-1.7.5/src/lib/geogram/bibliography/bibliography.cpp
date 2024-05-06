@@ -55,7 +55,7 @@ namespace {
 
     double timeorigin;
     
-    vector<const char*> bib_refs_;
+    std::vector<const char*> bib_refs_;
 
     struct CitationRecord {
 	CitationRecord(
@@ -66,6 +66,7 @@ namespace {
 	) : key(k), file(f), line(l), function(func), info(inf) {
 	    timestamp = SystemStopwatch::now() - timeorigin;
 	}
+
 	std::string key;
 	std::string file;
 	int line;
@@ -74,7 +75,7 @@ namespace {
 	double timestamp;
     };
     
-    vector<CitationRecord> citations_;
+    std::vector<CitationRecord> citations_;
 }
 
 void register_embedded_bib_file(void);
@@ -196,12 +197,12 @@ namespace GEO {
 		}
 	    }
 	    shortfunction = shortfunction.substr(pos, shortfunction.length()-pos);
-	    
-	    citations_.push_back(
-		CitationRecord(
-		    ref, shortfile, line, shortfunction, (info != nullptr) ? info : ""
-		)
-	    );
+
+		citations_.reserve(64);
+		auto xx = CitationRecord(
+			ref, shortfile, line, shortfunction, (info != nullptr) ? info : ""
+		);
+		citations_.push_back(xx);
 	    
 	    std::string context = std::string(shortfunction) + " (" +
 		shortfile + ":" +

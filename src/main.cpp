@@ -137,6 +137,9 @@ int main(int argc, char** argv) {
 	// std::cout << ">>> GENERATE: END" << std::endl;
 
 #if 1
+	std::cout << ">>> Result. Vertices: " << quadMeshGenerator->takeRemeshedVertices()->size()
+		<< "; Quads: " << quadMeshGenerator->takeRemeshedQuads()->size() << std::endl;
+
 	// Remeshed vertices.
 	std::unique_ptr<std::vector<AutoRemesher::Vector3>> remeshedVertices;
 	remeshedVertices.reset(quadMeshGenerator->takeRemeshedVertices());
