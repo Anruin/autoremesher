@@ -1,13 +1,15 @@
 @echo off
 setlocal
 
-set PLATFORM=Win32
-set BUILD_DIR=D:\Projects\Work\QuadRemesher\autoremesher
 set BOOST_DIR=C:\SDK\boost_1_66_0
 set VISUALSTUDIO=Visual Studio 17 2022
+set PLATFORM=x64
 
-REM Set up the Visual Studio environment
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"
+cd ..
+set BUILD_DIR=%cd%
+
+@REM REM Set up the Visual Studio environment
+@REM call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"
 
 REM Build the project dependencies
 
