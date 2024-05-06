@@ -20,8 +20,8 @@ set(GEOGRAM_DIR "thirdparty/geogram/geogram-1.7.5")
 # set(GEOGRAM_DIR "thirdparty/geogram/geogram")
 set(GEOGRAM_NL_EXT "cpp")
 
-set(CGAL_DIR "thirdparty/cgal/CGAL-5.1-beta1")
-# set(CGAL_DIR "thirdparty/cgal/CGAL-5.1")
+# set(CGAL_DIR "thirdparty/cgal/CGAL-5.1-beta1")
+set(CGAL_DIR "thirdparty/cgal/CGAL-5.1")
 
 # set(CGAL_DIR "thirdparty/cgal/CGAL-5.1-beta1")
 # set(CGAL_INCLUDE_DIR "thirdparty/cgal/CGAL-5.1-beta1/include")
@@ -43,8 +43,10 @@ include_directories(
         "${GEOGRAM_DIR}/src/lib"
         "thirdparty/geogram"
 
-        "thirdparty/cgal/gmp/include"
         "${CGAL_DIR}/include"
+        "${CGAL_DIR}/auxiliary/gmp/include"
+        # "thirdparty/cgal/gmp/include"
+        
         "include"
 )
 
@@ -402,7 +404,9 @@ set(MyFavLib_DIRECTORIES
     optimized "thirdparty/openvdb/openvdb-7.0.0/build/openvdb/Release/openvdb" debug "thirdparty/openvdb/openvdb-7.0.0/build/openvdb/Release/openvdb"
     optimized "thirdparty/openexr/openexr-2.4.1/build/IlmBase/Half/Release/Half-2_4" debug "thirdparty/openexr/openexr-2.4.1/build/IlmBase/Half/Debug/Half-2_4_d"
     optimized "thirdparty/zlib/zlib-1.2.11/build/Release/zlib" debug "thirdparty/zlib/zlib-1.2.11/build/Debug/zlibd"
-    optimized "thirdparty/cgal/gmp/lib/libgmp-10" debug "thirdparty/cgal/gmp/lib/libgmp-10"
-    optimized "thirdparty/cgal/gmp/lib/libmpfr-4" debug "thirdparty/cgal/gmp/lib/libmpfr-4"
+    optimized "${CGAL_DIR}/auxiliary/gmp/lib/libgmp-10" debug "${CGAL_DIR}/auxiliary/gmp/lib/libgmp-10"
+    optimized "${CGAL_DIR}/auxiliary/gmp/lib/libmpfr-4" debug "${CGAL_DIR}/auxiliary/gmp/lib/libmpfr-4"
+    # optimized "thirdparty/cgal/gmp/lib/libgmp-10" debug "thirdparty/cgal/gmp/lib/libgmp-10"
+    # optimized "thirdparty/cgal/gmp/lib/libmpfr-4" debug "thirdparty/cgal/gmp/lib/libmpfr-4"
     )
 target_link_libraries(${PROJECT_NAME} ${MyFavLib_DIRECTORIES})
