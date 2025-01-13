@@ -21,16 +21,11 @@
  */
 #include <AutoRemesher/VdbRemesher>
 #include <openvdb/openvdb.h>
-#include <openvdb/tools/MeshToVolume.h>
-#include <openvdb/tools/VolumeToMesh.h>
-#include <openvdb/tools/LevelSetFilter.h>
-#include <openvdb/tools/Morphology.h>
-#include <openvdb/tools/Mask.h>
+// #include <openvdb/tools/MeshToVolume.h>
+// #include <openvdb/tools/VolumeToMesh.h>
+// #include <openvdb/tools/Mask.h>
 #include <openvdb/tools/Clip.h>
-#include <openvdb/tools/LevelSetRebuild.h>
-#include <openvdb/tools/MultiResGrid.h>
-#include <openvdb/tools/Interpolation.h>
-#include <openvdb/tools/LevelSetUtil.h>
+// #include <openvdb/tools/MultiResGrid.h>
 
 #if AUTO_REMESHER_DEBUG
 #include <QDebug>

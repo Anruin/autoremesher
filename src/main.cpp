@@ -79,36 +79,40 @@ int main(int argc, char** argv) {
 	}
 
 	// Read vertices number.
-	size_t verticesNumber = 0;
-	inputFileStream.read((char*)&verticesNumber, sizeof(size_t));
+	{
+		size_t verticesNumber = 0;
+		inputFileStream.read(reinterpret_cast<char*>(&verticesNumber), sizeof(verticesNumber));
 
-	// Reserve memory for vertices.
-	input.vertices.resize(verticesNumber);
+		// Reserve memory for vertices.
+		input.vertices.resize(verticesNumber);
 
-	// Read vertices.
-	for (size_t i = 0; i < verticesNumber; i++) {
-		size_t vertexSize = 3;
-		input.vertices[i].resize(vertexSize);
+		// Read vertices.
+		for (size_t i = 0; i < verticesNumber; i++) {
+			int32_t vertexSize = 3;
+			input.vertices[i].resize(vertexSize);
 
-		// Read vertex.
-		inputFileStream.read((char*)input.vertices[i].data(), (std::streamsize)vertexSize * sizeof(double));
+			// Read vertex.
+			inputFileStream.read(reinterpret_cast<char*>(input.vertices[i].data()), static_cast<std::streamsize>(vertexSize * sizeof(double)));
+		}
 	}
 
 	// Read triangles number.
-	size_t trianglesNumber = 0;
-	inputFileStream.read((char*)&trianglesNumber, sizeof(size_t));
+	{
+		size_t trianglesNumber = 0;
+		inputFileStream.read(reinterpret_cast<char*>(&trianglesNumber), sizeof(trianglesNumber));
 
-	// Reserve memory for triangles.
-	input.triangles.resize(trianglesNumber);
+		// Reserve memory for triangles.
+		input.triangles.resize(trianglesNumber);
 
-	// Read triangles.
-	for (size_t i = 0; i < trianglesNumber; i++) {
-		// Reserve memory for triangle.
-		size_t triangleSize = 3;
-		input.triangles[i].resize(triangleSize);
+		// Read triangles.
+		for (size_t i = 0; i < trianglesNumber; i++) {
+			// Reserve memory for triangle.
+			int32_t triangleSize = 3;
+			input.triangles[i].resize(triangleSize);
 
-		// Read triangle.
-		inputFileStream.read((char*)input.triangles[i].data(), (std::streamsize)triangleSize * sizeof(size_t));
+			// Read triangle.
+			inputFileStream.read(reinterpret_cast<char*>(input.triangles[i].data()), static_cast<std::streamsize>(triangleSize * sizeof(size_t)));
+		}
 	}
 
 	// Prepare parameters.
@@ -117,6 +121,12 @@ int main(int argc, char** argv) {
 	parameters.targetTriangleCount = argTargetTriangleNumber;
 	parameters.modelType = argOrganicModel ? AutoRemesher::ModelType::Organic : AutoRemesher::ModelType::HardSurface;
 
+	// {
+	// 	const int base = 100000;
+	// 	const int range = 500000;
+	// 	parameters.targetTriangleCount = base + range * m_targetDensity;
+	// }
+	
 	// Prepare vertices and triangles.
 	std::vector<AutoRemesher::Vector3> vertices;
 	std::vector<std::vector<size_t>> triangles;
@@ -164,27 +174,31 @@ int main(int argc, char** argv) {
 	}
 
 	// Write vertices number.
-	verticesNumber = remeshedVertices->size();
-	outputFileStream.write((char*)&verticesNumber, sizeof(size_t));
+	{
+		size_t verticesNumber = remeshedVertices->size();
+		outputFileStream.write(reinterpret_cast<char*>(&verticesNumber), sizeof(verticesNumber));
 
-	// Write vertices.
-	for (size_t i = 0; i < verticesNumber; i++) {
-		// Write vertex.
-		outputFileStream.write((char*)&(*remeshedVertices)[i].x(), sizeof(double));
-		outputFileStream.write((char*)&(*remeshedVertices)[i].y(), sizeof(double));
-		outputFileStream.write((char*)&(*remeshedVertices)[i].z(), sizeof(double));
+		// Write vertices.
+		for (size_t i = 0; i < verticesNumber; i++) {
+			// Write vertex.
+			outputFileStream.write((char*)&(*remeshedVertices)[i].x(), sizeof(double));
+			outputFileStream.write((char*)&(*remeshedVertices)[i].y(), sizeof(double));
+			outputFileStream.write((char*)&(*remeshedVertices)[i].z(), sizeof(double));
+		}
 	}
 
 	// Write quads number.
-	trianglesNumber = remeshedQuads->size();
+	{
+		size_t trianglesNumber = remeshedQuads->size();
 
-	// Write quads.
-	for (size_t i = 0; i < trianglesNumber; i++) {
-		// Write quad.
-		outputFileStream.write((char*)&(*remeshedQuads)[i][0], sizeof(size_t));
-		outputFileStream.write((char*)&(*remeshedQuads)[i][1], sizeof(size_t));
-		outputFileStream.write((char*)&(*remeshedQuads)[i][2], sizeof(size_t));
-		outputFileStream.write((char*)&(*remeshedQuads)[i][3], sizeof(size_t));
+		// Write quads.
+		for (size_t i = 0; i < trianglesNumber; i++) {
+			// Write quad.
+			outputFileStream.write((char*)&(*remeshedQuads)[i][0], sizeof(size_t));
+			outputFileStream.write((char*)&(*remeshedQuads)[i][1], sizeof(size_t));
+			outputFileStream.write((char*)&(*remeshedQuads)[i][2], sizeof(size_t));
+			outputFileStream.write((char*)&(*remeshedQuads)[i][3], sizeof(size_t));
+		}
 	}
 #endif
 
